@@ -1,0 +1,20 @@
+server:
+  port: 8070
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: hello-world-service
+          uri: http://webapp-service:3000
+          predicates:
+            - Path=/api/hello-world/**
+          filters:
+            - StripPrefix=1
+
+        - id: dept-service
+          uri: http://dept-webapp-service:3001
+          predicates:
+            - Path=/api/dept/**
+          filters:
+            - StripPrefix=1
