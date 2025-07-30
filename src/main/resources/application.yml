@@ -18,3 +18,16 @@ spring:
             - Path=/api/dept/**
           filters:
             - StripPrefix=1
+      default-filters:
+        - RemoveRequestHeader=Cookie
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
