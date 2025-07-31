@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationConverter;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
@@ -26,10 +27,20 @@ public class SecurityConfig {
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         AuthenticationWebFilter jwtAuthFilter = new AuthenticationWebFilter(jwtAuthenticationManager);
         jwtAuthFilter.setServerAuthenticationConverter(bearerHeaderConverter());
+
+        // Only apply the filter if Authorization header starts with Bearer
+        jwtAuthFilter.setRequiresAuthenticationMatcher((exchange) -> {
+            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                return ServerWebExchangeMatcher.MatchResult.match();
+            }
+            return ServerWebExchangeMatcher.MatchResult.notMatch();
+        });
+
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/auth/**").permitAll()
+                        .pathMatchers("/auth/**","/api/hello-world/hello").permitAll()
                         .pathMatchers("/api/hello-world/**", "/api/dept/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().authenticated())
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
