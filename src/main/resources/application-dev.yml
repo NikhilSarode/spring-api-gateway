@@ -8,3 +8,10 @@ spring:
             - Path=/api/hello-world/**
           filters:
             - StripPrefix=1
+
+        - id: auth-service
+          uri: http://localhost:8050
+          predicates:
+            - Path=/api/auth/login
+          filters:
+            - StripPrefix=1

@@ -40,7 +40,7 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/auth/**","/api/hello-world/hello").permitAll()
+                        .pathMatchers("/api/auth/login","/api/hello-world/hello").permitAll()
                         .pathMatchers("/api/hello-world/**", "/api/dept/**").hasAnyRole("USER", "ADMIN")
                         .anyExchange().authenticated())
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
