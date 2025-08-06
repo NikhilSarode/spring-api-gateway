@@ -22,7 +22,7 @@ spring:
         - id: auth-service
           uri: http://auth-service-service:8055
           predicates:
-            - Path=/api/hello-world/**
+            - Path=/api/auth/login
           filters:
             - StripPrefix=1
       default-filters:
