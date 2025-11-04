@@ -19,6 +19,13 @@ spring:
           filters:
             - StripPrefix=1
 
+        - id: config-service
+          uri: http://config-service:3002
+          predicates:
+            - Path=/api/configuration/**
+          filters:
+            - StripPrefix=1
+
         - id: auth-service
           uri: http://auth-service-service:8055
           predicates:
